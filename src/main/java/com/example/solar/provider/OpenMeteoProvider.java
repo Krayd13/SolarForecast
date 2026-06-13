@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class OpenMeteoProvider extends AbstractWeatherProvider{
+public class OpenMeteoProvider implements ForecastProvider{
+    private static final double WATT_TO_KW = 1000.0;
+    private static final double SYSTEM_EFFICIENCY = 0.85;
 
     private static final Logger log = LoggerFactory.getLogger(OpenMeteoProvider.class);
     private final RestTemplate restTemplate;
@@ -44,7 +46,7 @@ public class OpenMeteoProvider extends AbstractWeatherProvider{
     }
 
     @Override
-    protected String buildUrlForPanel(Station station, StationPanel panel) {
+    public String buildUrlForPanel(Station station, StationPanel panel) {
         return String.format(
                 "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=shortwave_radiation&forecast_days=1",
                 station.getLatitude(),
@@ -53,13 +55,13 @@ public class OpenMeteoProvider extends AbstractWeatherProvider{
     }
 
     private double calculatePower(double radiation, double totalCapacity) {
-        double efficiencyFactor = radiation / AbstractWeatherProvider.WATT_TO_KW;
-        return Math.max(0, totalCapacity * efficiencyFactor * AbstractWeatherProvider.SYSTEM_EFFICIENCY);
+        double efficiencyFactor = radiation / WATT_TO_KW;
+        return Math.max(0, totalCapacity * efficiencyFactor * SYSTEM_EFFICIENCY);
     }
 
     private double calculateTotalCapacity(Station station) {
         double totalCapacity = station.getPanels().stream()
-                .mapToDouble(p -> (p.getCapacity() / AbstractWeatherProvider.WATT_TO_KW))
+                .mapToDouble(p -> (p.getCapacity() / WATT_TO_KW))
                 .sum();
         return (totalCapacity == 0) ? 5.0 : totalCapacity;
     }

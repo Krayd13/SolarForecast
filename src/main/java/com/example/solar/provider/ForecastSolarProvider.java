@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ForecastSolarProvider extends AbstractWeatherProvider{
+public class ForecastSolarProvider implements ForecastProvider{
+    private static final double WATT_TO_KW = 1000.0;
 
     private final RestTemplate restTemplate;
     private static final Logger log = LoggerFactory.getLogger(ForecastSolarProvider.class);
@@ -37,7 +38,7 @@ public class ForecastSolarProvider extends AbstractWeatherProvider{
     }
 
     @Override
-    protected String buildUrlForPanel(Station station, StationPanel panel) {
+    public String buildUrlForPanel(Station station, StationPanel panel) {
         return String.format(
                 "https://api.forecast.solar/estimate/%s/%s/%s/%s/%s",
                 station.getLatitude(),
