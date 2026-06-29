@@ -19,13 +19,13 @@ public class StationAnalyticsController {
     }
 
     @GetMapping("/{stationId}/summary")
-    public ResponseEntity<StationAnalyticsSummaryDto> getStationSummary(@PathVariable Long stationId){
+    public ResponseEntity<StationAnalyticsSummaryDto> getStationSummary(@PathVariable Long stationId) {
         return ResponseEntity.ok(analyticsService.getStationAnalyticsSummary(stationId));
     }
 
     @GetMapping("/{stationId}/day-details")
     public ResponseEntity<DayDetailsDto> getDayDetails(@PathVariable Long stationId,
-                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+                                                       @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return ResponseEntity.ok(analyticsService.getDayDetails(stationId, date));
     }
 }

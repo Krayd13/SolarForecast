@@ -11,11 +11,12 @@ import java.util.List;
 
 public interface ForecastRepository extends JpaRepository<ForecastData, Long> {
     List<ForecastData> findAllByStationIdAndSourceNameAndTimestampBetween(Long stationId,
-                                                                         SourceNames sourceName,
-                                                                         LocalDateTime from,
-                                                                         LocalDateTime to);
+                                                                          SourceNames sourceName,
+                                                                          LocalDateTime from,
+                                                                          LocalDateTime to);
 
     void deleteByStationId(Long stationId);
+
     @Query("SELECT DISTINCT f.sourceName FROM ForecastData f " +
             "WHERE f.station.id = :stationId " +
             "AND f.timestamp BETWEEN :start AND :end")

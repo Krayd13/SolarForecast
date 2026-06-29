@@ -18,27 +18,27 @@ public class StationPanelController {
     }
 
     @GetMapping("stations/{station_id}/panels")
-    public ResponseEntity<List<StationPanelDto>> getAllPanels(@PathVariable Long stationId){
+    public ResponseEntity<List<StationPanelDto>> getAllPanels(@PathVariable Long stationId) {
         return ResponseEntity.ok(panelService.getPanelsByStationId(stationId));
     }
 
     @GetMapping("panels/{id}")
-    public ResponseEntity<StationPanelDto> getPanelById(@PathVariable Long id){
+    public ResponseEntity<StationPanelDto> getPanelById(@PathVariable Long id) {
         return ResponseEntity.ok(panelService.findPanelById(id));
     }
 
     @PostMapping("stations/{station_id}/panels")
-    public ResponseEntity<StationPanelDto> createPanel(@Valid @RequestBody StationPanelDto panel){
+    public ResponseEntity<StationPanelDto> createPanel(@Valid @RequestBody StationPanelDto panel) {
         return ResponseEntity.ok(panelService.createPanel(panel));
     }
 
     @PutMapping("/panels/{id}")
-    public ResponseEntity<StationPanelDto> updatePanel(@PathVariable Long id, @Valid @RequestBody StationPanelDto panel){
+    public ResponseEntity<StationPanelDto> updatePanel(@PathVariable Long id, @Valid @RequestBody StationPanelDto panel) {
         return ResponseEntity.ok(panelService.updatePanel(id, panel));
     }
 
     @DeleteMapping("/panels/{id}")
-    public ResponseEntity<Void> deletePanel(@PathVariable Long id){
+    public ResponseEntity<Void> deletePanel(@PathVariable Long id) {
         panelService.deletePanel(id);
         return ResponseEntity.noContent().build();
     }

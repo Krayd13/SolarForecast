@@ -26,11 +26,11 @@ public class SolarAnalyticsScheduler {
     }
 
     @Scheduled(cron = "0 0 1 * * *")
-    public void runDailyAnalyticsComputation(){
+    public void runDailyAnalyticsComputation() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         List<Station> stations = stationRepository.findAll();
 
-        for(Station station : stations){
+        for (Station station : stations) {
             try {
                 analyticProcessor.calculateAndSaveDailyAccuracyForAllSources(station.getId(), yesterday);
             } catch (Exception e) {

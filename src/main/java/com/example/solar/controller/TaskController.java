@@ -1,7 +1,6 @@
 package com.example.solar.controller;
 
 import com.example.solar.dto.TaskDto;
-import com.example.solar.service.ForecastRunner;
 import com.example.solar.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -19,27 +18,27 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDto>> getAllTasks(){
+    public ResponseEntity<List<TaskDto>> getAllTasks() {
         return ResponseEntity.ok(taskService.getAllTasks());
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<TaskDto>> getActiveTasks(){
+    public ResponseEntity<List<TaskDto>> getActiveTasks() {
         return ResponseEntity.ok(taskService.getAllActiveTasks());
     }
 
     @PostMapping
-    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto task){
+    public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto task) {
         return ResponseEntity.ok(taskService.createTask(task));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<TaskDto> changeActivity(@PathVariable Long id){
+    public ResponseEntity<TaskDto> changeActivity(@PathVariable Long id) {
         return ResponseEntity.ok(taskService.changeActivity(id));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable Long id){
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }

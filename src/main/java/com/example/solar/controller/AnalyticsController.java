@@ -1,8 +1,6 @@
 package com.example.solar.controller;
 
 import com.example.solar.service.DailyAnalyticProcessor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +23,7 @@ public class AnalyticsController {
     @PostMapping("/recalculate")
     public ResponseEntity<String> triggerAnalytics(
             @RequestParam Long stationId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date){
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         processor.calculateAndSaveDailyAccuracyForAllSources(stationId, date);
         return ResponseEntity.ok("Recalculation triggered! Check your database logs.");
 

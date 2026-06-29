@@ -7,7 +7,8 @@ import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ForecastSolarDto(@JsonProperty("result") Result result) {
-    public record Result(@JsonProperty("watt_hours_period") Map<String, Double> wattHoursPeriod){
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record Result(@JsonProperty("watt_hours_period") Map<String, Double> wattHoursPeriod) {
 
     }
 }

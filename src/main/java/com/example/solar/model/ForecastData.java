@@ -20,44 +20,49 @@ public class ForecastData {
     private SourceNames sourceName;
     private Double value;
 
-    public ForecastData(){}
+    public ForecastData() {
+    }
 
-    private ForecastData(Builder builder){
+    private ForecastData(Builder builder) {
         this.station = builder.station;
         this.timestamp = builder.timestamp;
         this.sourceName = builder.sourceName;
         this.value = builder.value;
     }
 
-    public static Builder builder(){return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
-    public static class Builder{
+    public static class Builder {
         private Station station;
         private LocalDateTime timestamp;
         private SourceNames sourceName;
         private Double value;
 
-        public Builder station(Station station){
+        public Builder station(Station station) {
             this.station = station;
             return this;
         }
 
-        public Builder timestamp(LocalDateTime timestamp){
+        public Builder timestamp(LocalDateTime timestamp) {
             this.timestamp = timestamp;
             return this;
         }
 
-        public Builder sourceName(SourceNames sourceName){
+        public Builder sourceName(SourceNames sourceName) {
             this.sourceName = sourceName;
             return this;
         }
 
-        public Builder value(Double value){
+        public Builder value(Double value) {
             this.value = value;
             return this;
         }
 
-        public ForecastData build(){return new ForecastData(this);}
+        public ForecastData build() {
+            return new ForecastData(this);
+        }
     }
 
     public Long getId() {

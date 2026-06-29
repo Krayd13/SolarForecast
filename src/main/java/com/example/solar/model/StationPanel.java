@@ -18,42 +18,49 @@ public class StationPanel {
     private Integer tilt;
     private Integer capacity;
 
-    public StationPanel(){}
+    public StationPanel() {
+    }
 
-    private StationPanel(Builder builder){
+    private StationPanel(Builder builder) {
         this.station = builder.station;
         this.azimuth = builder.azimuth;
         this.tilt = builder.tilt;
         this.capacity = builder.capacity;
     }
 
-    public static Builder builder(){return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
-    public static class Builder{
+    public static class Builder {
         private Station station;
         private Integer azimuth;
         private Integer tilt;
         private Integer capacity;
-        public Builder station(Station station){
+
+        public Builder station(Station station) {
             this.station = station;
             return this;
         }
 
-        public Builder azimuth(Integer azimuth){
+        public Builder azimuth(Integer azimuth) {
             this.azimuth = azimuth;
             return this;
         }
 
-        public Builder tilt(Integer tilt){
+        public Builder tilt(Integer tilt) {
             this.tilt = tilt;
             return this;
         }
 
-        public Builder capacity(Integer capacity){
+        public Builder capacity(Integer capacity) {
             this.capacity = capacity;
             return this;
         }
-        public StationPanel build(){return new StationPanel(this);}
+
+        public StationPanel build() {
+            return new StationPanel(this);
+        }
     }
 
     public Long getId() {

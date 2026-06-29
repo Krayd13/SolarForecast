@@ -22,31 +22,31 @@ public class ForecastRunner {
         this.forecastRepository = forecastRepository;
     }
 
-    public void runHourlyActualMonitoring(){
+    public void runHourlyActualMonitoring() {
         List<Task> tasks = taskRepository.findTasksByIsActiveTrue();
-        for(Task task : tasks){
-            if(task.getSourceName() == SourceNames.ACTUAL){
+        for (Task task : tasks) {
+            if (task.getSourceName() == SourceNames.ACTUAL) {
                 executeTask(task);
             }
         }
     }
 
-    public void runDailyForecasts(){
+    public void runDailyForecasts() {
         List<Task> tasks = taskRepository.findTasksByIsActiveTrue();
-        for(Task task : tasks){
-            if(task.getSourceName() != SourceNames.ACTUAL){
+        for (Task task : tasks) {
+            if (task.getSourceName() != SourceNames.ACTUAL) {
                 executeTask(task);
             }
         }
     }
 
-    public void executeTask(Task task){
+    public void executeTask(Task task) {
         providers.stream()
                 .filter(p -> p.getSourceName().equals(task.getSourceName()))
                 .findFirst()
                 .ifPresent(provider -> {
-                   List<ForecastData> data = provider.fetch(task.getStation());
-                   forecastRepository.saveAll(data);
+                    List<ForecastData> data = provider.fetch(task.getStation());
+                    forecastRepository.saveAll(data);
                 });
     }
 }

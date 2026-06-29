@@ -13,7 +13,7 @@ public class StationMapper {
     public static StationDto toDto(Station station){
         List<StationPanelDto> panels = (station.getPanels() == null) ? List.of() :
                 station.getPanels().stream().map(StationPanelMapper::toDto).toList();
-        return new StationDto(station.getName(), station.getLatitude(), station.getLongitude(), panels);
+        return new StationDto(station.getName(), station.getLatitude(), station.getLongitude(), station.getApiToken(), station.getDeviceSn(), panels);
     }
 
     public static Station toEntity(StationDto dto){
@@ -21,6 +21,8 @@ public class StationMapper {
                 .name(dto.name())
                 .latitude(dto.latitude())
                 .longitude(dto.longitude())
+                .apiToken(dto.apiToken())
+                .deviceSn(dto.deviceSn())
                 .build();
 
         List<StationPanel> panels = (dto.panels() == null) ? List.of() : dto.panels().stream()

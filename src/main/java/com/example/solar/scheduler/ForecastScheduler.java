@@ -16,22 +16,22 @@ public class ForecastScheduler {
     }
 
     @Scheduled(cron = "0 0 * * * *")
-    public void runHourlyForecastsAndMonitoringUpdate(){
+    public void runHourlyForecastsAndMonitoringUpdate() {
         log.info("Cron: Збір фактичної генерації за останню годину...");
-        try{
+        try {
             forecastRunner.runHourlyActualMonitoring();
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Помилка щогодинного збору фактичних даних: {}", e.getMessage());
         }
     }
 
     @Scheduled(cron = "0 0 5 * * *")
-    public void collectDailyForecasts(){
+    public void collectDailyForecasts() {
         log.info("Cron: Запуск щоденного оновлення прогнозів погоди...");
-        try{
+        try {
             forecastRunner.runDailyForecasts();
             log.info("Щоденні прогнози успішно завантажено.");
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Помилка під час завантаження щоденних прогнозів: {}", e.getMessage());
         }
     }

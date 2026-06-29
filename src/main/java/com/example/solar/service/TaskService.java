@@ -31,22 +31,22 @@ public class TaskService {
         return taskRepository.findAll().stream().map(TaskMapper::toDto).toList();
     }
 
-    public List<TaskDto> getAllActiveTasks(){
+    public List<TaskDto> getAllActiveTasks() {
         return taskRepository.findTasksByIsActiveTrue().stream().map(TaskMapper::toDto).toList();
     }
 
-    public TaskDto createTask(TaskDto task){
+    public TaskDto createTask(TaskDto task) {
         Station station = stationRepository.findById(task.stationId()).orElseThrow(() -> new EntityNotFoundException("Station not found with id: " + task.stationId()));
         Task saved = taskRepository.save(TaskMapper.toEntity(task, station));
-        try{
-            if(task.sourceName() == SourceNames.ACTUAL){
+        try {
+            if (task.sourceName() == SourceNames.ACTUAL) {
                 forecastRunner.runHourlyActualMonitoring();
                 log.info("Створено завдання моніторингу. Миттєво запущено збір фактичних даних");
-            } else{
+            } else {
                 forecastRunner.runDailyForecasts();
                 log.info("Створено завдання прогнозу. Миттєво запущено стягування прогнозів з API");
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             log.error("Завдання успішно створено, але виникла помилка первинного збору даних: {}", e.getMessage());
         }
         return TaskMapper.toDto(saved);
@@ -54,7 +54,7 @@ public class TaskService {
 
 
     public void deleteTask(Long id) {
-        if(!taskRepository.existsById(id)){
+        if (!taskRepository.existsById(id)) {
             throw new EntityNotFoundException("Task not found with id: " + id);
         }
         taskRepository.deleteById(id);

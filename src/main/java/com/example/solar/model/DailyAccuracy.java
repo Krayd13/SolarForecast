@@ -18,9 +18,12 @@ public class DailyAccuracy {
     private Double mape;
     private Double rmse;
 
-    public DailyAccuracy(){}
+    public DailyAccuracy() {
+    }
 
-    public static Builder builder(){return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
     private DailyAccuracy(Builder builder) {
         this.stationId = builder.stationId;
@@ -30,39 +33,41 @@ public class DailyAccuracy {
         this.rmse = builder.rmse;
     }
 
-    public static class Builder{
+    public static class Builder {
         private Long stationId;
         private SourceNames sourceName;
         private LocalDate date;
         private Double mape;
         private Double rmse;
 
-        public Builder stationId(Long stationId){
+        public Builder stationId(Long stationId) {
             this.stationId = stationId;
             return this;
         }
 
-        public Builder sourceName(SourceNames sourceName){
+        public Builder sourceName(SourceNames sourceName) {
             this.sourceName = sourceName;
             return this;
         }
 
-        public Builder date(LocalDate date){
+        public Builder date(LocalDate date) {
             this.date = date;
             return this;
         }
 
-        public Builder mape(Double mape){
+        public Builder mape(Double mape) {
             this.mape = mape;
             return this;
         }
 
-        public Builder rmse(Double rmse){
+        public Builder rmse(Double rmse) {
             this.rmse = rmse;
             return this;
         }
 
-        public DailyAccuracy build(){return new DailyAccuracy(this);}
+        public DailyAccuracy build() {
+            return new DailyAccuracy(this);
+        }
     }
 
     public Long getId() {

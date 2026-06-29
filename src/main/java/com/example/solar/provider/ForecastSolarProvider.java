@@ -7,6 +7,7 @@ import com.example.solar.model.StationPanel;
 import com.example.solar.provider.dto.ForecastSolarDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,14 +17,18 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class ForecastSolarProvider implements ForecastProvider{
+public class ForecastSolarProvider implements ForecastProvider {
     private static final double WATT_TO_KW = 1000.0;
 
     private final RestTemplate restTemplate;
+    private final String apiUrl;
     private static final Logger log = LoggerFactory.getLogger(ForecastSolarProvider.class);
 
-    public ForecastSolarProvider(RestTemplate restTemplate) {
+    public ForecastSolarProvider(
+            RestTemplate restTemplate,
+            @Value("${solar.provider.forecast-solar.url}") String apiUrl) {
         this.restTemplate = restTemplate;
+        this.apiUrl = apiUrl;
     }
 
     @Override
@@ -38,9 +43,9 @@ public class ForecastSolarProvider implements ForecastProvider{
     }
 
     @Override
-    public String buildUrlForPanel(Station station, StationPanel panel) {
+    public String buildUrl(Station station, StationPanel panel) {
         return String.format(
-                "https://api.forecast.solar/estimate/%s/%s/%s/%s/%s",
+                this.apiUrl + "/%s/%s/%s/%s/%s", // Динамічно додаємо параметри до базового URL
                 station.getLatitude(),
                 station.getLongitude(),
                 panel.getTilt(),
@@ -50,7 +55,7 @@ public class ForecastSolarProvider implements ForecastProvider{
     }
 
     private void fetchPanelData(Station station, StationPanel panel, Map<LocalDateTime, Double> aggregatedData) {
-        String url = buildUrlForPanel(station, panel);
+        String url = buildUrl(station, panel);
         ForecastSolarDto response = restTemplate.getForObject(url, ForecastSolarDto.class);
 
         if (response == null || response.result() == null) {
@@ -64,13 +69,13 @@ public class ForecastSolarProvider implements ForecastProvider{
         });
     }
 
-    private Map<LocalDateTime, Double> fetchAndAggregate(Station station){
+    private Map<LocalDateTime, Double> fetchAndAggregate(Station station) {
         Map<LocalDateTime, Double> aggregatedData = new HashMap<>();
 
-        for(StationPanel panel : station.getPanels()){
+        for (StationPanel panel : station.getPanels()) {
             fetchPanelData(station, panel, aggregatedData);
         }
-        return  aggregatedData;
+        return aggregatedData;
     }
 
     private List<ForecastData> mapToForecast(Station station, Map<LocalDateTime, Double> aggregatedData) {

@@ -34,7 +34,7 @@ public class StationService {
                 .map(StationMapper::toDto).toList();
     }
 
-    public StationDto createStation(StationDto station){
+    public StationDto createStation(StationDto station) {
         Station saved = stationRepository.save(StationMapper.toEntity(station));
         return StationMapper.toDto(saved);
     }
@@ -56,7 +56,7 @@ public class StationService {
 
     @Transactional
     public void deleteStation(Long id) {
-        if(!stationRepository.existsById(id)){
+        if (!stationRepository.existsById(id)) {
             throw new EntityNotFoundException("Station not found with id: " + id);
         }
         forecastRepository.deleteByStationId(id);

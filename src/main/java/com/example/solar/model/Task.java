@@ -21,7 +21,8 @@ public class Task {
     private LocalDate endDate;
     private Boolean isActive;
 
-    public Task() {}
+    public Task() {
+    }
 
     private Task(Builder builder) {
         this.station = builder.station;
@@ -31,39 +32,45 @@ public class Task {
         this.isActive = builder.isActive;
     }
 
-    public static Builder builder(){return new Builder();}
+    public static Builder builder() {
+        return new Builder();
+    }
 
-    public static class Builder{
+    public static class Builder {
         private Station station;
         private SourceNames sourceName;
         private LocalDate startDate;
         private LocalDate endDate;
         private Boolean isActive;
-        public Builder station(Station station){
+
+        public Builder station(Station station) {
             this.station = station;
             return this;
         }
 
-        public Builder sourceName(SourceNames sourceName){
+        public Builder sourceName(SourceNames sourceName) {
             this.sourceName = sourceName;
             return this;
         }
 
-        public Builder startDate(LocalDate startDate){
+        public Builder startDate(LocalDate startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public Builder endDate(LocalDate endDate){
+        public Builder endDate(LocalDate endDate) {
             this.endDate = endDate;
             return this;
         }
 
-        public Builder isActive(Boolean isActive){
+        public Builder isActive(Boolean isActive) {
             this.isActive = isActive;
             return this;
         }
-        public Task build(){return new Task(this);}
+
+        public Task build() {
+            return new Task(this);
+        }
     }
 
     public Long getId() {

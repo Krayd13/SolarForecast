@@ -9,7 +9,6 @@ import com.example.solar.mapper.ForecastMapper;
 import com.example.solar.model.DailyAccuracy;
 import com.example.solar.repository.ForecastAccuracyRepository;
 import com.example.solar.repository.ForecastRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,7 +27,7 @@ public class StationAnalyticsService {
         this.forecastRepository = forecastRepository;
     }
 
-    public StationAnalyticsSummaryDto getStationAnalyticsSummary(Long stationId){
+    public StationAnalyticsSummaryDto getStationAnalyticsSummary(Long stationId) {
         List<DailyAccuracy> accuracyList = accuracyRepository.findAllByStationId(stationId);
         double averageMape = accuracyList.stream().map(DailyAccuracy::getMape).mapToDouble(Double::doubleValue).average()
                 .orElse(0.0);
@@ -38,11 +37,11 @@ public class StationAnalyticsService {
         return new StationAnalyticsSummaryDto(100 - averageMape, averageMape, averageRmse, accuracyList.size(), sourcesAccuracy);
     }
 
-    public DayDetailsDto getDayDetails(Long stationId, LocalDate date){
+    public DayDetailsDto getDayDetails(Long stationId, LocalDate date) {
         Map<SourceNames, List<ForecastDto>> hourlyData = getHourlyGeneration(stationId, date);
         List<ForecastDto> actualData = hourlyData != null ? hourlyData.remove(SourceNames.ACTUAL) : null;
 
-        if(isDataMissing(hourlyData, actualData)){
+        if (isDataMissing(hourlyData, actualData)) {
             return new DayDetailsDto(100.0, SourceNames.ACTUAL, 0.0, 0.0, Map.of());
         }
 
@@ -56,7 +55,7 @@ public class StationAnalyticsService {
         return new DayDetailsDto(dayAccuracy, bestSource, metrics.averageError(), metrics.maxDeviation(), metrics.hourlyErrors());
     }
 
-    private Map<SourceNames, List<ForecastDto>> getHourlyGeneration(Long stationId, LocalDate date){
+    private Map<SourceNames, List<ForecastDto>> getHourlyGeneration(Long stationId, LocalDate date) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
 
@@ -66,9 +65,11 @@ public class StationAnalyticsService {
         return result;
     }
 
-    private record HourlyCalculation(double maxDeviation, double averageError, Map<SourceNames, List<Double>> hourlyErrors){}
+    private record HourlyCalculation(double maxDeviation, double averageError,
+                                     Map<SourceNames, List<Double>> hourlyErrors) {
+    }
 
-    private HourlyCalculation calculateHourlyMetrics(Map<SourceNames, List<ForecastDto>> hourlyData, List<ForecastDto> actualData){
+    private HourlyCalculation calculateHourlyMetrics(Map<SourceNames, List<ForecastDto>> hourlyData, List<ForecastDto> actualData) {
         Map<SourceNames, List<Double>> result = new HashMap<>();
         double maxDeviation = 0;
         double sumErrors = 0;
@@ -82,7 +83,7 @@ public class StationAnalyticsService {
             for (int i = 0; i < hoursToCompare; i++) {
                 double delta = Math.abs(entry.getValue().get(i).value() - actualData.get(i).value());
                 sumErrors += delta;
-                if(delta > maxDeviation){
+                if (delta > maxDeviation) {
                     maxDeviation = delta;
                 }
                 deltaList.add(Math.round(delta * 100.0) / 100.0);

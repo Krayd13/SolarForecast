@@ -50,7 +50,7 @@ public class StationPanelService {
     }
 
     public void deletePanel(Long id) {
-        if(!panelRepository.existsById(id)){
+        if (!panelRepository.existsById(id)) {
             throw new EntityNotFoundException("Station Panel not found by id: " + id);
         }
         panelRepository.deleteById(id);

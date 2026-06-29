@@ -16,5 +16,11 @@ public record StationDto(
                         @Min(value = -180, message = "Довгота не може бути меншою за -180")
                         @Max(value = 180, message = "Довгота не може бути більшою за 180")
                         Double longitude,
+                        @NotNull(message = "Токен є обов'язковим полем")
+                        @NotBlank(message = "Токен не може бути порожнім або складатися з пробілів")
+                        String apiToken,
+                        @NotNull(message = "Серійний номер є обов'язковим полем")
+                        @NotBlank(message = "Серійний номер не може бути порожнім або складатися з пробілів")
+                        String deviceSn,
                         List<StationPanelDto> panels) {
 }

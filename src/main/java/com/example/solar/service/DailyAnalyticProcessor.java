@@ -32,24 +32,24 @@ public class DailyAnalyticProcessor {
     }
 
     @Transactional
-    public void calculateAndSaveDailyAccuracyForAllSources(Long stationId, LocalDate date){
+    public void calculateAndSaveDailyAccuracyForAllSources(Long stationId, LocalDate date) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
         List<SourceNames> sourceNames = forecastRepository.findDistinctSourceNamesByStationIdAndTimestampBetween(stationId, start, end).stream()
                 .map(SourceNames::valueOf).filter(name -> name != SourceNames.ACTUAL).toList();
 
-        for(SourceNames name : sourceNames){
-            try{
+        for (SourceNames name : sourceNames) {
+            try {
                 calculateAndSaveDailyAccuracy(stationId, name, date);
                 log.info("Успішно пораховано аналітику за {} джерела {}", date, name.name());
-            }catch(Exception e){
+            } catch (Exception e) {
                 log.error("Помилка розрахунку аналітики за {} джерела {}: {}", date, name.name(), e.getMessage());
             }
         }
     }
 
     @Transactional
-    private DailyAccuracyDto calculateAndSaveDailyAccuracy(Long stationId, SourceNames sourceName, LocalDate date){
+    private DailyAccuracyDto calculateAndSaveDailyAccuracy(Long stationId, SourceNames sourceName, LocalDate date) {
         LocalDateTime start = date.atStartOfDay();
         LocalDateTime end = date.atTime(LocalTime.MAX);
 
@@ -60,7 +60,7 @@ public class DailyAnalyticProcessor {
                 actualList != null ? actualList.size() : "NULL-СПИСОК",
                 forecastList != null ? forecastList.size() : "NULL-СПИСОК");
 
-        if(actualList.isEmpty() || forecastList.isEmpty()){
+        if (actualList.isEmpty() || forecastList.isEmpty()) {
             throw new EntityNotFoundException("No data for analytic");
         }
 
@@ -73,17 +73,18 @@ public class DailyAnalyticProcessor {
         return AccuracyMapper.toDto(dailyAccuracy);
     }
 
-    private record AccuracyMetrics(Double mape, Double rmse){}
+    private record AccuracyMetrics(Double mape, Double rmse) {
+    }
 
     private AccuracyMetrics calculateMetrics(List<ForecastData> forecastList, Map<LocalDateTime, Double> actualMap) {
         double sumPercentageError = 0;
         double sumAbsoluteSquareError = 0;
         int matchedPoints = 0;
-        for(ForecastData forecast : forecastList){
+        for (ForecastData forecast : forecastList) {
             Double actualValue = actualMap.get(forecast.getTimestamp());
-            if(actualValue != null){
+            if (actualValue != null) {
                 double absError = Math.abs(actualValue - forecast.getValue());
-                double pctError = (actualValue == 0) ? 0.0 :  absError / actualValue;
+                double pctError = (actualValue == 0) ? 0.0 : absError / actualValue;
                 sumPercentageError += pctError;
                 sumAbsoluteSquareError += Math.pow(absError, 2);
                 matchedPoints++;
@@ -91,7 +92,7 @@ public class DailyAnalyticProcessor {
 
         }
 
-        if(matchedPoints == 0){
+        if (matchedPoints == 0) {
             throw new IllegalArgumentException("No overlapping timestamps between actual and forecast data");
         }
 
@@ -111,8 +112,6 @@ public class DailyAnalyticProcessor {
                 .build();
         return accuracyRepository.save(dailyAccuracy);
     }
-
-
 
 
 }

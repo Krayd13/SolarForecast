@@ -7,6 +7,7 @@ import com.example.solar.model.StationPanel;
 import com.example.solar.provider.dto.OpenMeteoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,15 +16,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class OpenMeteoProvider implements ForecastProvider{
+public class OpenMeteoProvider implements ForecastProvider {
     private static final double WATT_TO_KW = 1000.0;
-    private static final double SYSTEM_EFFICIENCY = 0.85;
+
+    private final RestTemplate restTemplate;
+    private final String apiUrl;
+    private final double systemEfficiency;
+    private final double defaultCapacity;
 
     private static final Logger log = LoggerFactory.getLogger(OpenMeteoProvider.class);
-    private final RestTemplate restTemplate;
 
-    public OpenMeteoProvider(RestTemplate restTemplate) {
+    public OpenMeteoProvider(
+            RestTemplate restTemplate,
+            @Value("${solar.provider.open-meteo.url}") String apiUrl,
+            @Value("${solar.provider.open-meteo.efficiency}") double systemEfficiency,
+            @Value("${solar.provider.open-meteo.default-capacity}") double defaultCapacity) {
         this.restTemplate = restTemplate;
+        this.apiUrl = apiUrl;
+        this.systemEfficiency = systemEfficiency;
+        this.defaultCapacity = defaultCapacity;
     }
 
     @Override
@@ -33,8 +44,8 @@ public class OpenMeteoProvider implements ForecastProvider{
 
     @Override
     public List<ForecastData> fetch(Station station) {
-        OpenMeteoDto response = restTemplate.getForObject(buildUrlForPanel(station, null), OpenMeteoDto.class);
-        if (response == null || response.hourlyData() == null){
+        OpenMeteoDto response = restTemplate.getForObject(buildUrl(station, null), OpenMeteoDto.class);
+        if (response == null || response.hourlyData() == null) {
             log.warn("Отримано порожню відповідь від API для станції {}", station.getId());
             return new ArrayList<>();
         }
@@ -46,9 +57,9 @@ public class OpenMeteoProvider implements ForecastProvider{
     }
 
     @Override
-    public String buildUrlForPanel(Station station, StationPanel panel) {
+    public String buildUrl(Station station, StationPanel panel) {
         return String.format(
-                "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=shortwave_radiation&forecast_days=1",
+                this.apiUrl + "?latitude=%s&longitude=%s&hourly=shortwave_radiation&forecast_days=1",
                 station.getLatitude(),
                 station.getLongitude()
         );
@@ -56,14 +67,14 @@ public class OpenMeteoProvider implements ForecastProvider{
 
     private double calculatePower(double radiation, double totalCapacity) {
         double efficiencyFactor = radiation / WATT_TO_KW;
-        return Math.max(0, totalCapacity * efficiencyFactor * SYSTEM_EFFICIENCY);
+        return Math.max(0, totalCapacity * efficiencyFactor * systemEfficiency);
     }
 
     private double calculateTotalCapacity(Station station) {
         double totalCapacity = station.getPanels().stream()
                 .mapToDouble(p -> (p.getCapacity() / WATT_TO_KW))
                 .sum();
-        return (totalCapacity == 0) ? 5.0 : totalCapacity;
+        return (totalCapacity == 0) ? defaultCapacity : totalCapacity;
     }
 
     private List<ForecastData> mapToForecast(Station station, OpenMeteoDto response, double totalCapacity) {

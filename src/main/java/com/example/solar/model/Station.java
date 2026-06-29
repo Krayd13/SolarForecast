@@ -14,6 +14,8 @@ public class Station {
     private String name;
     private Double latitude;
     private Double longitude;
+    private String apiToken;
+    private String deviceSn;
     @OneToMany(mappedBy = "station", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StationPanel> panels;
 
@@ -23,6 +25,8 @@ public class Station {
         this.name = builder.name;
         this.latitude = builder.latitude;
         this.longitude = builder.longitude;
+        this.apiToken = builder.apiToken;
+        this.deviceSn = builder.deviceSn;
         this.panels = builder.panels;
     }
 
@@ -32,6 +36,8 @@ public class Station {
         private String name;
         private Double latitude;
         private Double longitude;
+        private String apiToken;
+        private String deviceSn;
         private List<StationPanel> panels;
         public Builder name(String name){
             this.name = name;
@@ -45,6 +51,16 @@ public class Station {
 
         public Builder longitude(Double longitude){
             this.longitude = longitude;
+            return this;
+        }
+
+        public Builder apiToken(String apiToken){
+            this.apiToken = apiToken;
+            return this;
+        }
+
+        public Builder deviceSn(String deviceSn){
+            this.deviceSn = deviceSn;
             return this;
         }
 
@@ -87,6 +103,22 @@ public class Station {
         this.longitude = longitude;
     }
 
+    public String getApiToken() {
+        return apiToken;
+    }
+
+    public void setApiToken(String apiToken) {
+        this.apiToken = apiToken;
+    }
+
+    public String getDeviceSn() {
+        return deviceSn;
+    }
+
+    public void setDeviceSn(String deviceSn) {
+        this.deviceSn = deviceSn;
+    }
+
     public List<StationPanel> getPanels() {
         return panels;
     }
@@ -100,11 +132,11 @@ public class Station {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Station station = (Station) o;
-        return Objects.equals(id, station.id) && Objects.equals(name, station.name) && Objects.equals(latitude, station.latitude) && Objects.equals(longitude, station.longitude) && Objects.equals(panels, station.panels);
+        return Objects.equals(id, station.id) && Objects.equals(name, station.name) && Objects.equals(latitude, station.latitude) && Objects.equals(longitude, station.longitude) && Objects.equals(apiToken, station.apiToken) && Objects.equals(deviceSn, station.deviceSn) && Objects.equals(panels, station.panels);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, latitude, longitude, panels);
+        return Objects.hash(id, name, latitude, longitude, apiToken, deviceSn, panels);
     }
 }

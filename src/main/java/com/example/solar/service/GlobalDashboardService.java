@@ -2,10 +2,8 @@ package com.example.solar.service;
 
 import com.example.solar.dto.DailyAccuracyDto;
 import com.example.solar.dto.GlobalDashboardDto;
-import com.example.solar.model.DailyAccuracy;
 import com.example.solar.repository.ForecastAccuracyRepository;
 import com.example.solar.repository.StationRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +18,7 @@ public class GlobalDashboardService {
         this.accuracyRepository = accuracyRepository;
     }
 
-    public GlobalDashboardDto getGlobalDashboard(){
+    public GlobalDashboardDto getGlobalDashboard() {
         int activeStationCount = (int) stationRepository.count();
         Double averageMape = accuracyRepository.getGlobalAverageMape();
         double totalAverageAccuracy = (averageMape != null) ? (100 - averageMape) : 100.0;

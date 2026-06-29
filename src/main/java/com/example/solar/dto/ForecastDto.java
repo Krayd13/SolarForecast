@@ -1,7 +1,6 @@
 package com.example.solar.dto;
 
 import com.example.solar.SourceNames;
-import com.example.solar.model.Station;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;

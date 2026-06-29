@@ -18,27 +18,27 @@ public class StationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<StationDto>> getAllStations(){
+    public ResponseEntity<List<StationDto>> getAllStations() {
         return ResponseEntity.ok(stationService.getAllStations());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StationDto> getStationById(@PathVariable Long id){
+    public ResponseEntity<StationDto> getStationById(@PathVariable Long id) {
         return ResponseEntity.ok(stationService.findStation(id));
     }
 
     @PostMapping
-    public ResponseEntity<StationDto> createStation(@Valid @RequestBody StationDto station){
+    public ResponseEntity<StationDto> createStation(@Valid @RequestBody StationDto station) {
         return ResponseEntity.ok(stationService.createStation(station));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StationDto> updateStation(@PathVariable Long id, @Valid @RequestBody StationDto station){
+    public ResponseEntity<StationDto> updateStation(@PathVariable Long id, @Valid @RequestBody StationDto station) {
         return ResponseEntity.ok(stationService.updateStation(id, station));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStation(@PathVariable Long id){
+    public ResponseEntity<Void> deleteStation(@PathVariable Long id) {
         stationService.deleteStation(id);
         return ResponseEntity.noContent().build();
     }

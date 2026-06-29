@@ -17,7 +17,7 @@ public class GlobalDashboardController {
     }
 
     @GetMapping
-    public ResponseEntity<GlobalDashboardDto> getGlobalDashboard(){
+    public ResponseEntity<GlobalDashboardDto> getGlobalDashboard() {
         return ResponseEntity.ok(dashboardService.getGlobalDashboard());
     }
 }

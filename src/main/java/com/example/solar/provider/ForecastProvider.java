@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface ForecastProvider {
     SourceNames getSourceName();
+
     List<ForecastData> fetch(Station station);
-    String buildUrlForPanel(Station station, StationPanel panel);
+
+    String buildUrl(Station station, StationPanel panel);
 }
